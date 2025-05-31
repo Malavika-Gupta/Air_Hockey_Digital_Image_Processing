@@ -5,6 +5,10 @@ from utils.Paddle import Paddle
 from utils.collision import handle_collision
 from utils.constants import WIDTH, HEIGHT, LEFT_OFFSET, RIGHT_OFFSET
 from utils.Score import Score
+from utils.handle_power_up_collision import handle_power_up_collision
+from utils.PowerUp import PowerUp
+import random
+import time
 
 # Initialize video capture
 vid = cv2.VideoCapture(0)
@@ -16,11 +20,22 @@ hand_detection.create_trackbars()
 # Create an instance of Score
 score = Score()
 
+# Initialize power-up variables
+power_ups = []  # List to store active power-ups
+power_up_spawn_time = time.time()  # Timer for spawning power-ups
+
+def spawn_power_up():
+    x = random.randint(LEFT_OFFSET + 50, RIGHT_OFFSET - 50)  # Random x position
+    y = random.randint(50, HEIGHT - 50)  # Random y position
+    type = random.choice(["speed", "freeze", "multi-ball"])  # Random type
+    power_ups.append(PowerUp(x, y, type))
 
 def main():
     left_paddle = Paddle(LEFT_OFFSET, HEIGHT // 2, (255, 0, 0))
     right_paddle = Paddle(RIGHT_OFFSET, HEIGHT // 2, (0, 255, 0))
     ball = Ball(WIDTH // 2, HEIGHT // 2)
+
+    global power_ups, power_up_spawn_time  # Access global variables
 
     while vid.isOpened():
         ret, frame = vid.read()
@@ -30,7 +45,7 @@ def main():
         # Resize to defined size
         frame = cv2.resize(frame, (WIDTH, HEIGHT))
 
-        # Flip the frame for
+        # Flip the frame for mirror effect
         frame = cv2.flip(frame, 1)
 
         # Get Centroids of hands/color
@@ -52,11 +67,23 @@ def main():
         # Start move ball
         ball.move(frame)
 
+        # Handle power-up collisions
+        handle_power_up_collision(ball, power_ups, left_paddle, right_paddle)
+
         # Display score on frame
         score.show(ball, frame)
 
         # Handle collision between ball and paddles
         handle_collision(ball, left_paddle, right_paddle, frame)
+
+        # Spawn power-ups periodically
+        if time.time() - power_up_spawn_time > 10:  # Spawn every 10 seconds
+            spawn_power_up()
+            power_up_spawn_time = time.time()  # Reset the timer
+
+        # Draw power-ups
+        for power_up in power_ups:
+            power_up.draw(frame)
 
         cv2.imshow("Hand Gesture Slider", frame)
 
@@ -68,7 +95,6 @@ def main():
     # Release the video capture and close all OpenCV windows
     vid.release()
     cv2.destroyAllWindows()
-
 
 if __name__ == "__main__":
     main()

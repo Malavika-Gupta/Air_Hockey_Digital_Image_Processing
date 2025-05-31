@@ -41,3 +41,4 @@ def handle_collision(ball, left_paddle, right_paddle, frame):
         hit_sound.play()
 
     ball.move(frame)
+
