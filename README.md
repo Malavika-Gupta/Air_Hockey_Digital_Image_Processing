@@ -49,3 +49,18 @@ pip install opencv-python pygame numpy
 python main.py
 ```
 3️⃣ Use q to quit.
+
+---
+
+## 🤝 **Contact & Collaboration**
+
+Got ideas to improve this game?  
+Want to collaborate on computer vision, machine learning, or interactive projects?  
+I’m always up for brainstorming, co-building, or even just swapping geeky ideas.
+
+📫 **Contact:** malavika2gupta@gmail.com
+💼 **LinkedIn:** [Malavika-Gupta](https://www.linkedin.com/in/malavika-gupta-616468298/)  
+
+Feel free to fork, star ⭐, and open issues — or drop a message if you want to team up.
+
+Let’s build something awesome. 🚀
