@@ -34,6 +34,7 @@ def main():
     left_paddle = Paddle(LEFT_OFFSET, HEIGHT // 2, (255, 0, 0))
     right_paddle = Paddle(RIGHT_OFFSET, HEIGHT // 2, (0, 255, 0))
     ball = Ball(WIDTH // 2, HEIGHT // 2)
+    right_paddle_freeze_time = None
 
     global power_ups, power_up_spawn_time  # Access global variables
 
@@ -49,7 +50,11 @@ def main():
         frame = cv2.flip(frame, 1)
 
         # Get Centroids of hands/color
-        centroids = hand_detection.get_centroid(frame)
+        try:
+            centroids = hand_detection.get_centroid(frame)
+        except cv2.error:
+            hand_detection.create_trackbars()
+            centroids = hand_detection.get_centroid(frame)
 
         # Assign centroids to paddles
         if len(centroids) == 1:
@@ -69,6 +74,16 @@ def main():
 
         # Handle power-up collisions
         handle_power_up_collision(ball, power_ups, left_paddle, right_paddle)
+
+        for power_up in power_ups:
+            if power_up.type == "freeze" and right_paddle.frozen:
+                if right_paddle_freeze_time is None:
+                    right_paddle_freeze_time = time.time()
+
+        if right_paddle.frozen and right_paddle_freeze_time is not None:
+            if time.time() - right_paddle_freeze_time > 5:
+                right_paddle.unfreeze()
+                right_paddle_freeze_time = None
 
         # Display score on frame
         score.show(ball, frame)

@@ -14,7 +14,7 @@ class HandDetection():
         cv2.createTrackbar('HueMin', 'Trackbars', 0, 179, empty)
         cv2.createTrackbar('HueMax', 'Trackbars', 179, 179, empty)
         cv2.createTrackbar('SatMin', 'Trackbars', 0, 255, empty)
-        cv2.createTrackbar('SatMax', 'Trackbars', 255, 255, empty)
+        cv2.createTrackbar('SatMax', 'Trackbars',60, 255, empty)
         cv2.createTrackbar('ValMin', 'Trackbars', 0, 255, empty)
         cv2.createTrackbar('ValMax', 'Trackbars', 60, 255, empty)
     

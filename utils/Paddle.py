@@ -28,6 +28,11 @@ class Paddle:
         if self.y + self.height//2 >= HEIGHT:
             self.y = HEIGHT - self.height//2
         
+    def freeze(self):
+        self.frozen = True
+
+    def unfreeze(self):
+        self.frozen = False
 
     # def reset(self):
     #     self.x = self. original_x
