@@ -31,6 +31,8 @@ def spawn_power_up():
     power_ups.append(PowerUp(x, y, type))
 
 def main():
+    cv2.namedWindow("Hand Gesture Slider", cv2.WINDOW_NORMAL)
+    cv2.moveWindow("Hand Gesture Slider", 10, 10)
     left_paddle = Paddle(LEFT_OFFSET, HEIGHT // 2, (255, 0, 0))
     right_paddle = Paddle(RIGHT_OFFSET, HEIGHT // 2, (0, 255, 0))
     ball = Ball(WIDTH // 2, HEIGHT // 2)
@@ -50,11 +52,7 @@ def main():
         frame = cv2.flip(frame, 1)
 
         # Get Centroids of hands/color
-        try:
-            centroids = hand_detection.get_centroid(frame)
-        except cv2.error:
-            hand_detection.create_trackbars()
-            centroids = hand_detection.get_centroid(frame)
+        centroids = hand_detection.get_centroid(frame)
 
         # Assign centroids to paddles
         if len(centroids) == 1:
@@ -99,6 +97,8 @@ def main():
         # Draw power-ups
         for power_up in power_ups:
             power_up.draw(frame)
+
+        power_ups = [p for p in power_ups if time.time() - p.spawn_time < p.lifespan]
 
         cv2.imshow("Hand Gesture Slider", frame)
 

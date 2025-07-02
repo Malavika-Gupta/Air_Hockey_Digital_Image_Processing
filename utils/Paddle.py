@@ -8,6 +8,7 @@ class Paddle:
         self.width = PADDLE_WIDTH
         self.height = PADDLE_HEIGHT
         self.color = color
+        self.frozen = False
 
     def draw(self, frame):
         cv2.rectangle(
